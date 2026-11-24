@@ -1,0 +1,21 @@
+evidenciar 3 commits, subir a git, neon, desplegar en render
+
+Desarrollar una API REST utilizando Python y FastAPI, conectada a una base de datos PostgreSQL alojada
+en Neon.
+Cada aprendiz deberá implementar un CRUD de usuarios y desarrollar adicionalmente uno de los cinco
+ejercicios propuestos.
+El proyecto deberá implementar una arquitectura por capas, utilizar Git para el control de versiones y
+quedar desplegado en Render.
+La solución deberá estar documentada y su arquitectura deberá ser sustentada técnicamente.
+
+Ejercicio 4. API para catálogo de libros
+Aprendiz: ANDERSON ORREGO BEDOYA
+Desarrollar una API para administrar información bibliográfica.
+Actividades:
+1. Registrar libros.
+2. Consultar todos los libros.
+3. Consultar un libro por ID.
+4. Actualizar la información de un libro.
+5. Investigar e implementar un filtro para consultar libros según su categoría.
+6. Eliminar libros.
+Datos: ID, título, autor, editorial, año de publicación y categoría.
