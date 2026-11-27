@@ -3,139 +3,121 @@ from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from database import Base, engine, get_db
-from models import Person
-from schemas import PersonCreate, PersonResponse
+from models import Book
+from schemas import BookCreate, BookResponse
 
 # Crear la tabla en Neon si todavía no existe
 Base.metadata.create_all(bind=engine)
 
-app = FastAPI(title="People API")
+app = FastAPI(title="Books API")
 
 
 # ====================================
-# GET: Consultar todas las personas
+# GET: Consultar todos los libros -done
 # ====================================
-@app.get("/people", response_model=list[PersonResponse])
-def get_people(db: Session = Depends(get_db)):
-    people = db.query(Person).all()
-    return people
+@app.get("/books", response_model=list[BookResponse])
+def get_book(db: Session = Depends(get_db)):
+    book = db.query(Book).all()
+    return book
 
 
 # ====================================
-# GET: Consultar una persona
+# GET: Consultar un libro -done
 # ====================================
-@app.get("/people/{person_id}", response_model=PersonResponse)
-def get_person(
-    person_id: int,
+@app.get("/books/{book_id}", response_model=BookResponse)
+def get_book(
+    book_id: int,
     db: Session = Depends(get_db)
 ):
-    person = db.query(Person).filter(
-        Person.id == person_id
+    book = db.query(Book).filter(
+        Book.id == book_id
     ).first()
 
-    if person is None:
+    if book is None:
         raise HTTPException(
             status_code=404,
-            detail="Person not found"
+            detail="Book not found"
         )
 
-    return person
+    return book
 
 
 # ====================================
-# POST: Registrar una persona
+# POST: Registrar una persona -done
 # ====================================
-@app.post("/people", response_model=PersonResponse, status_code=201)
-def create_person(
-    data: PersonCreate,
+@app.post("/books", response_model=BookResponse, status_code=201)
+def create_book(
+    data: BookCreate,
     db: Session = Depends(get_db)
 ):
-    # Validar que el correo no esté registrado
-    existing = db.query(Person).filter(
-        Person.email == data.email
-    ).first()
 
-    if existing:
-        raise HTTPException(
-            status_code=400,
-            detail="Email already registered"
-        )
-
-    person = Person(
-        name=data.name,
-        email=data.email,
-        age=data.age
+    book = Book(
+        title=data.title,
+        author=data.author,
+        publisher=data.publisher,
+        year=data.year,
+        category=data.category
     )
 
-    db.add(person)
+    db.add(book)
     db.commit()
-    db.refresh(person)
+    db.refresh(book)
 
-    return person
+    return book
 
 
 # ====================================
-# PUT: Actualizar una persona
+# PUT: Actualizar info -done
 # ====================================
-@app.put("/people/{person_id}", response_model=PersonResponse)
+@app.put("/books/{book_id}", response_model=BookResponse)
 def update_person(
-    person_id: int,
-    data: PersonCreate,
+    book_id: int,
+    data:  BookCreate,
     db: Session = Depends(get_db)
 ):
-    person = db.query(Person).filter(
-        Person.id == person_id
+    book = db.query(Book).filter(
+        Book.id == book_id
     ).first()
 
-    if person is None:
+    if book is None:
         raise HTTPException(
             status_code=404,
-            detail="Person not found"
+            detail="Book not found"
         )
 
-    # Validar que el correo no pertenezca a otra persona
-    duplicated = db.query(Person).filter(
-        Person.email == data.email,
-        Person.id != person_id
-    ).first()
-
-    if duplicated:
-        raise HTTPException(
-            status_code=400,
-            detail="Email already registered"
-        )
-
-    person.name = data.name
-    person.email = data.email
-    person.age = data.age
+    book.name = data.name
+    book.title = data.title
+    book.publisher = data.publisher
+    book.year = data.year
+    book.category = data.category
 
     db.commit()
-    db.refresh(person)
+    db.refresh(book)
 
-    return person
+    return book
 
 
 # ====================================
-# DELETE: Eliminar una persona
+# DELETE: Eliminar un libro -done
 # ====================================
-@app.delete("/people/{person_id}")
-def delete_person(
-    person_id: int,
+@app.delete("/books/{book_id}")
+def delete_book(
+    book_id: int,
     db: Session = Depends(get_db)
 ):
-    person = db.query(Person).filter(
-        Person.id == person_id
+    book = db.query(Book).filter(
+        Book.id == book_id
     ).first()
 
-    if person is None:
+    if book is None:
         raise HTTPException(
             status_code=404,
-            detail="Person not found"
+            detail="Book not found"
         )
 
-    db.delete(person)
+    db.delete(book)
     db.commit()
 
     return {
-        "message": "Person deleted successfully"
+        "message": "The book was successfully deleted"
     }

@@ -3,7 +3,7 @@ from sqlalchemy import Column, Integer, String
 from database import Base
 
 
-class Person(Base):
+class Book(Base):
     # Nombre de la tabla
     __tablename__ = "Books"
 
